@@ -1270,15 +1270,18 @@ containing a value of this type.
         public static final int common_signin_btn_text_pressed_dark=0x7f02006e;
         public static final int common_signin_btn_text_pressed_light=0x7f02006f;
         public static final int facebook=0x7f020070;
-        public static final int ic_launcher=0x7f020071;
-        public static final int ic_plusone_medium_off_client=0x7f020072;
-        public static final int ic_plusone_small_off_client=0x7f020073;
-        public static final int ic_plusone_standard_off_client=0x7f020074;
-        public static final int ic_plusone_tall_off_client=0x7f020075;
-        public static final int logo=0x7f020076;
-        public static final int rectangle=0x7f020077;
-        public static final int rectangleblue2=0x7f020078;
-        public static final int rectangleyellow=0x7f020079;
+        public static final int greencheck=0x7f020071;
+        public static final int ic_launcher=0x7f020072;
+        public static final int ic_plusone_medium_off_client=0x7f020073;
+        public static final int ic_plusone_small_off_client=0x7f020074;
+        public static final int ic_plusone_standard_off_client=0x7f020075;
+        public static final int ic_plusone_tall_off_client=0x7f020076;
+        public static final int logo=0x7f020077;
+        public static final int rectangle=0x7f020078;
+        public static final int rectangleblue2=0x7f020079;
+        public static final int rectangleyellow=0x7f02007a;
+        public static final int redcheck=0x7f02007b;
+        public static final int yellowcheck=0x7f02007c;
     }
     public static final class id {
         public static final int CheckActive=0x7f050048;
@@ -1305,8 +1308,8 @@ containing a value of this type.
         public static final int action_settings=0x7f05005a;
         public static final int activity_chooser_view_content=0x7f050028;
         public static final int always=0x7f05000b;
+        public static final int area=0x7f050053;
         public static final int beginning=0x7f050011;
-        public static final int button2=0x7f050053;
         public static final int checkBox2=0x7f050058;
         public static final int checkbox=0x7f050030;
         public static final int collapseActionView=0x7f05000d;

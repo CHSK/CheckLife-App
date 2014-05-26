@@ -1,11 +1,24 @@
 package com.example.chsk;
 
+import java.util.zip.CheckedInputStream;
+
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.location.LocationClient;
+import com.google.android.gms.maps.model.LatLng;
+
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.ActionBar;
 import android.support.v4.app.Fragment;
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -13,15 +26,23 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.os.Build;
 
-public class CheckActivity extends ActionBarActivity {
-//options is the amount of stuff we can search for
-//boolean checks is to keep track of the checkboxes that are checked
-int options = 8;
-boolean checks[] = new boolean[options];
-CheckBox checkbox[] = new CheckBox[options];
+public class CheckActivity extends ActionBarActivity implements 
+GooglePlayServicesClient.ConnectionCallbacks,
+GooglePlayServicesClient.OnConnectionFailedListener {
+	//options is the amount of stuff we can search for
+	//boolean checks is to keep track of the checkboxes that are checked
+	int options = 8;
+	int areaCode = 0;
+	boolean checks[] = new boolean[options];
+	CheckBox checkbox[] = new CheckBox[options];
+	LocationClient mLocationClient;
+	Location currentLocation;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +53,8 @@ CheckBox checkbox[] = new CheckBox[options];
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
-	
+		mLocationClient = new LocationClient(this, this, this);
+
 	}
 
 	@SuppressLint("NewApi")
@@ -44,20 +66,103 @@ CheckBox checkbox[] = new CheckBox[options];
 		//returns the btn to its normal color
 		getMenuInflater().inflate(R.menu.login, menu);
 		Button b1 = (Button) findViewById(R.id.quick);
-		Button b2 = (Button) findViewById(R.id.button2);
+		//Button b2 = (Button) findViewById(R.id.button2);
 		 b1.setBackground(getResources().getDrawable(R.drawable.rectangle));
-		 b2.setBackground(getResources().getDrawable(R.drawable.rectangle));
+		 //b2.setBackground(getResources().getDrawable(R.drawable.rectangle));
 		return true;
 	}
-//Go to map
+
+
+
+//this handles entering an area code
+	public void enterArea(final View view)
+	{
+		 
+		
+		AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+
+        LinearLayout layout = new LinearLayout(this);
+        LinearLayout.LayoutParams parms = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        layout.setOrientation(LinearLayout.VERTICAL);
+        layout.setLayoutParams(parms);
+
+        layout.setGravity(Gravity.CLIP_VERTICAL);
+        layout.setPadding(2, 2, 2, 2);
+
+        TextView tv = new TextView(this);
+        tv.setText("Enter an Area Code");
+        tv.setPadding(40, 40, 40, 40);
+        tv.setGravity(Gravity.CENTER);
+        tv.setTextSize(20);
+
+        final EditText et = new EditText(this);
+        
+       
+
+        LinearLayout.LayoutParams tv1Params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+        tv1Params.bottomMargin = 5;
+       
+        layout.addView(et, new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT));
+
+        alertDialogBuilder.setView(layout);
+        alertDialogBuilder.setTitle("Area Code");
+        // alertDialogBuilder.setMessage("Input Student ID");
+        alertDialogBuilder.setCustomTitle(tv);
+
+      
+
+        // Setting Negative "Cancel" Button
+        alertDialogBuilder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int whichButton) {
+                dialog.cancel();
+            }
+        });
+
+        // Setting Positive "Yes" Button
+        alertDialogBuilder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+            	try{
+            		String temp = et.getText().toString();
+            	 areaCode = Integer.parseInt(temp);
+            	 goToMap(view);
+            	}
+            	catch(Exception e)
+            	{
+            		//invaild area code
+            		areaCode = 0;
+            		
+            	}
+
+            }
+        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        try {
+            alertDialog.show();
+        } catch (Exception e) {
+            // WindowManager$BadTokenException will be caught and the app would
+            // not display the 'Force Close' message
+            e.printStackTrace();
+        }
+			}
+		
+	
+	
 	@SuppressLint("NewApi")
 	public void goToMap(View view)
 	{
-		
-		TextView tv = new TextView(this); 
+		currentLocation = mLocationClient.getLastLocation();
+		double latitude = currentLocation.getLatitude();
+		double longitude = currentLocation.getLongitude();
+		LatLng cLocation = new LatLng(latitude, longitude);
+		Bundle currentLocation = new Bundle();
+		currentLocation.putParcelable("currentLocation", cLocation);
+
+		TextView tv = new TextView(this);
 		tv=(TextView)findViewById(R.id.textView1);
 		//tv.setText(test);
-			checkbox[0] = (CheckBox) findViewById(R.id.CheckIndoors);
+		checkbox[0] = (CheckBox) findViewById(R.id.CheckIndoors);
 		checkbox[1] = (CheckBox) findViewById(R.id.CheckOutdoors);
 		checkbox[2] = (CheckBox) findViewById(R.id.CheckActive);
 		checkbox[3] = (CheckBox) findViewById(R.id.CheckInactive);
@@ -65,27 +170,39 @@ CheckBox checkbox[] = new CheckBox[options];
 		checkbox[5] = (CheckBox) findViewById(R.id.CheckNight);
 		checkbox[6] = (CheckBox) findViewById(R.id.CheckFood);
 		checkbox[7] = (CheckBox) findViewById(R.id.CheckFree);
-		
-		
+
+
 		//determines which boxes are checked
 		for(int i = 0; i < options; i ++)
 		{
 			checks[i] = checkbox[i].isChecked();
 		//	tv.append(" " + checks[i]);
 		}
+
 		Button b1 = (Button) findViewById(R.id.quick);
-		
-		         b1.setBackground(getResources().getDrawable(R.drawable.rectangleyellow));
-		 
-		         
+		b1.setBackground(getResources().getDrawable(R.drawable.rectangleyellow));
+
 		 Intent intent = new Intent(this, Map.class);
-		         
+		 
+			 intent.putExtra("areaCode", areaCode);
+		 
 		 intent.putExtra("checks", checks);
+		 
+		 intent.putExtra("location", currentLocation);
 				 //this is the line you need to retrieve the checks in the next intent
 			//	 boolean checks[] = getIntent().getBooleanArrayExtra("checks");
 		 startActivity(intent);
-
 	}
+
+	protected void onStart() {
+		super.onStart();
+		mLocationClient.connect();
+	}
+	@Override
+	public void onConnected(Bundle dataBundle) {}
+	@Override
+	public void onDisconnected() {}
+	public void onConnectionFailed(ConnectionResult connectionResult) {}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {

@@ -117,7 +117,7 @@
                 android:id="@+id/CheckFree"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Free"
+                android:text="Other..."
                 android:textSize="20sp" />
         </TableRow>
         
@@ -144,26 +144,27 @@
     </TableLayout>
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/area"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/quick"
         android:layout_alignLeft="@+id/quick"
+        android:layout_alignParentBottom="true"
         android:layout_marginBottom="14dp"
         android:background="@drawable/rectangle"
         android:minWidth="10000dip"
-        android:text="CheckLife With Area Code" />
+        android:onClick="enterArea"
+        android:text="Area Code" />
 
     <Button
         android:id="@+id/quick"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/area"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="42dp"
+        android:layout_marginBottom="14dp"
         android:background="@drawable/rectangle"
         android:minWidth="10000dip"
         android:onClick="goToMap"
-        android:text="CheckLife With GPS" />
+        android:text="Local Search" />
 
 </RelativeLayout>

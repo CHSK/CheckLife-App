@@ -123,16 +123,19 @@ GooglePlayServicesClient.OnConnectionFailedListener {
             public void onClick(DialogInterface dialog, int which) {
             	try{
             		String temp = et.getText().toString();
-            	 areaCode = Integer.parseInt(temp);
-            	 goToMap(view);
+            		areaCode = Integer.parseInt(temp);
+            	
             	}
             	catch(Exception e)
             	{
             		//invaild area code
             		areaCode = 0;
-            		
+            	//	 Log.v("bye", "blah blah");
             	}
-
+            	if(areaCode > 0)
+            	{
+            		 goToMap(view);
+            	}
             }
         });
 
@@ -148,10 +151,10 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 			}
 		
 	
-	
 	@SuppressLint("NewApi")
 	public void goToMap(View view)
 	{
+		
 		currentLocation = mLocationClient.getLastLocation();
 		double latitude = currentLocation.getLatitude();
 		double longitude = currentLocation.getLongitude();
@@ -169,7 +172,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 		checkbox[4] = (CheckBox) findViewById(R.id.CheckDay);
 		checkbox[5] = (CheckBox) findViewById(R.id.CheckNight);
 		checkbox[6] = (CheckBox) findViewById(R.id.CheckFood);
-		checkbox[7] = (CheckBox) findViewById(R.id.CheckFree);
+		checkbox[7] = (CheckBox) findViewById(R.id.CheckFood);
 
 
 		//determines which boxes are checked
@@ -192,6 +195,7 @@ GooglePlayServicesClient.OnConnectionFailedListener {
 				 //this is the line you need to retrieve the checks in the next intent
 			//	 boolean checks[] = getIntent().getBooleanArrayExtra("checks");
 		 startActivity(intent);
+		 Log.v("blah", "blah blah");
 	}
 
 	protected void onStart() {
